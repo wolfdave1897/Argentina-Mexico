@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hora y Clima - México y Argentina</title>
+    <script>
+        async function getData() {
+            const mexicoTime = await fetch("https://worldtimeapi.org/api/timezone/America/Mexico_City").then(res => res.json());
+            const argentinaTime = await fetch("https://worldtimeapi.org/api/timezone/America/Argentina/Buenos_Aires").then(res => res.json());
+            const mexicoWeather = await fetch("https://api.open-meteo.com/v1/forecast?latitude=19.43&longitude=-99.13&current_weather=true").then(res => res.json());
+            const argentinaWeather = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-34.61&longitude=-58.38&current_weather=true").then(res => res.json());
+
+            document.getElementById("mexico").innerHTML = `
+                <p><strong>Hora:</strong> ${new Date(mexicoTime.datetime).toLocaleTimeString()}</p>
+                <p><strong>Temperatura:</strong> ${mexicoWeather.current_weather.temperature}°C</p>
+            `;
+
+            document.getElementById("argentina").innerHTML = `
+                <p><strong>Hora:</strong> ${new Date(argentinaTime.datetime).toLocaleTimeString()}</p>
+                <p><strong>Temperatura:</strong> ${argentinaWeather.current_weather.temperature}°C</p>
+            `;
+        }
+    </script>
+</head>
+<body onload="getData()">
+    <h1>Hora y Clima en México y Argentina</h1>
+    <div>
+        <h2>Ciudad de México</h2>
+        <div id="mexico">Cargando...</div>
+    </div>
+    <div>
+        <h2>Buenos Aires</h2>
+        <div id="argentina">Cargando...</div>
+    </div>
+</body>
+</html>
