@@ -4,6 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hora y Clima - México y Argentina</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f0f0f0;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .box {
+            width: 300px;
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.2rem;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #mexico {
+            background: linear-gradient(to bottom, #006847, #ffffff, #ce1126);
+        }
+
+        #argentina {
+            background: linear-gradient(to bottom, #74ACDF, #ffffff, #74ACDF);
+        }
+    </style>
+
     <script>
         async function getData() {
             const mexicoTime = await fetch("https://worldtimeapi.org/api/timezone/America/Mexico_City").then(res => res.json());
@@ -12,11 +57,13 @@
             const argentinaWeather = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-34.61&longitude=-58.38&current_weather=true").then(res => res.json());
 
             document.getElementById("mexico").innerHTML = `
+                <h2>Ciudad de México 🇲🇽</h2>
                 <p><strong>Hora:</strong> ${new Date(mexicoTime.datetime).toLocaleTimeString()}</p>
                 <p><strong>Temperatura:</strong> ${mexicoWeather.current_weather.temperature}°C</p>
             `;
 
             document.getElementById("argentina").innerHTML = `
+                <h2>Buenos Aires 🇦🇷</h2>
                 <p><strong>Hora:</strong> ${new Date(argentinaTime.datetime).toLocaleTimeString()}</p>
                 <p><strong>Temperatura:</strong> ${argentinaWeather.current_weather.temperature}°C</p>
             `;
@@ -25,13 +72,10 @@
 </head>
 <body onload="getData()">
     <h1>Hora y Clima en México y Argentina</h1>
-    <div>
-        <h2>Ciudad de México</h2>
-        <div id="mexico">Cargando...</div>
-    </div>
-    <div>
-        <h2>Buenos Aires</h2>
-        <div id="argentina">Cargando...</div>
+    <div class="container">
+        <div id="mexico" class="box">Cargando...</div>
+        <div id="argentina" class="box">Cargando...</div>
     </div>
 </body>
 </html>
+
