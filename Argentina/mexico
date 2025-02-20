@@ -14,8 +14,12 @@
 
         body {
             background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             text-align: center;
-            padding: 20px;
         }
 
         h1 {
@@ -37,36 +41,52 @@
             border-radius: 10px;
             color: white;
             font-size: 1.2rem;
+            text-align: center;
             box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+            border: 3px solid white;
         }
 
         #mexico {
             background: linear-gradient(to bottom, #006847, #ffffff, #ce1126);
+            color: black;
         }
 
         #argentina {
             background: linear-gradient(to bottom, #74ACDF, #ffffff, #74ACDF);
+            color: black;
         }
     </style>
 
     <script>
         async function getData() {
-            const mexicoTime = await fetch("https://worldtimeapi.org/api/timezone/America/Mexico_City").then(res => res.json());
-            const chacoTime = await fetch("https://worldtimeapi.org/api/timezone/America/Argentina/Cordoba").then(res => res.json());
-            const mexicoWeather = await fetch("https://api.open-meteo.com/v1/forecast?latitude=19.43&longitude=-99.13&current_weather=true").then(res => res.json());
-            const chacoWeather = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-27.46&longitude=-58.98&current_weather=true").then(res => res.json());
+            try {
+                const mexicoTimeRes = await fetch("https://worldtimeapi.org/api/timezone/America/Mexico_City");
+                const chacoTimeRes = await fetch("https://worldtimeapi.org/api/timezone/America/Argentina/Salta");
+                const mexicoWeatherRes = await fetch("https://api.open-meteo.com/v1/forecast?latitude=19.43&longitude=-99.13&current_weather=true");
+                const chacoWeatherRes = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-27.46&longitude=-58.98&current_weather=true");
 
-            document.getElementById("mexico").innerHTML = `
-                <h2>Ciudad de México 🇲🇽</h2>
-                <p><strong>Hora:</strong> ${new Date(mexicoTime.datetime).toLocaleTimeString()}</p>
-                <p><strong>Temperatura:</strong> ${mexicoWeather.current_weather.temperature}°C</p>
-            `;
+                const mexicoTime = await mexicoTimeRes.json();
+                const chacoTime = await chacoTimeRes.json();
+                const mexicoWeather = await mexicoWeatherRes.json();
+                const chacoWeather = await chacoWeatherRes.json();
 
-            document.getElementById("argentina").innerHTML = `
-                <h2>Resistencia, Chaco 🇦🇷</h2>
-                <p><strong>Hora:</strong> ${new Date(chacoTime.datetime).toLocaleTimeString()}</p>
-                <p><strong>Temperatura:</strong> ${chacoWeather.current_weather.temperature}°C</p>
-            `;
+                const mexicoHora = new Date(mexicoTime.datetime).toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+                const chacoHora = new Date(chacoTime.datetime).toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+
+                document.getElementById("mexico").innerHTML = `
+                    <h2>Ciudad de México 🇲🇽</h2>
+                    <p><strong>Hora:</strong> ${mexicoHora}</p>
+                    <p><strong>Temperatura:</strong> ${mexicoWeather.current_weather.temperature}°C</p>
+                `;
+
+                document.getElementById("argentina").innerHTML = `
+                    <h2>Resistencia, Chaco 🇦🇷</h2>
+                    <p><strong>Hora:</strong> ${chacoHora}</p>
+                    <p><strong>Temperatura:</strong> ${chacoWeather.current_weather.temperature}°C</p>
+                `;
+            } catch (error) {
+                console.error("Error obteniendo datos:", error);
+            }
         }
     </script>
 </head>
